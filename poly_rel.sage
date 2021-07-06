@@ -54,7 +54,7 @@ if __name__=='__main__':
     o = open('result.txt','w')
 
     text = """
-The rows of the column gives the coefficients of the relations.
+The rows of the relation matrix gives the coefficients of the relations.
 For example, if G = Gamma0(6), the relation matrix is
 
     [ 0  0  1 -1  2 11]
@@ -63,7 +63,7 @@ so a polynomial relation in weight 4 is given by:
 
     g1*g3 - g2^2 + 2*g2*g3 + 11*g3^2 = 0
 
-where g1, g2 and g3 are the generators of M(Gamma0(6))
+where g1, g2 and g3 are generators for M(Gamma0(6))
 \n"""
 
     print("Writing on file 'result.txt' ")
