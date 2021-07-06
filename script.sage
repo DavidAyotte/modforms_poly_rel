@@ -27,7 +27,7 @@ where g1, g2 and g3 are generators for M(Gamma0(6))
 
     print("Writing on file 'result.txt' ")
     o.write(text)
-    G = Gamma0 # Currently works only for Gamma0
+    G = Gamma0 # The code currently only works for Gamma0
     maxN = 25 # Maximum level
     print("Maximum level: %s"%(maxN))
     verbose = False # Set this to True if you want more console outputs
