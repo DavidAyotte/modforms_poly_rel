@@ -7,7 +7,7 @@ Note that this implementation works only if the generators all have the same wei
 
 EXAMPLE:
 
-```python
+```sage
     sage: M = ModularFormsRing(Gamma0(6))
     sage: relations(M, 4)
     [ 0  0  1 -1  2 11]
@@ -24,10 +24,12 @@ More relations can be found in the file [result.txt](https://github.com/DavidAyo
 * [script.sage](https://github.com/DavidAyotte/modforms_poly_rel/blob/main/script.sage): contains the script that execute the functions defined in [relation.sage](https://github.com/DavidAyotte/modforms_poly_rel/blob/main/relations.sage);
 * [result.txt](https://github.com/DavidAyotte/modforms_poly_rel/blob/main/result.txt): contains the result of the script computations.
 
-If you only need to have access to the utility function, after cloning this repo, you should write in your SageMath session:
+After cloning this repo, if you only want to use the utility functions (and don't run the script), you should execute the following command in your SageMath session:
 
 ```sage
     sage: load('relation.sage')
 ```
+
+This will only load the functions defined in `relation.sage` in your current session. To see the docstring of a given function, you can write `name_of_function?`.
 
 Note: this code was tested for [SageMath](https://www.sagemath.org/) version 9.0 and above.
