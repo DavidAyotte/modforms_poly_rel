@@ -77,10 +77,9 @@ def check_generators_weights(M):
     else:
         return False
 
-def homogeneous_monomials_of_weight(M, weight, check=False):
+def homogeneous_monomials_of_weight(M, weight):
     r"""
-    Returns the list of all homogeneous monomials of weight `weight`. If `check` is
-    set to `True`, then the function check if the weights are all the same.
+    Returns the list of all homogeneous monomials of weight `weight`.
 
     EXAMPLES::
 
@@ -91,12 +90,12 @@ def homogeneous_monomials_of_weight(M, weight, check=False):
         q^2 - 2*q^3 + 3*q^4 + O(q^6)]
         sage: g0, g1, g2 = M.gen_forms()
         sage: homogeneous_monomials_of_weight(M, 4)
-        [1 + 48*q^3 + O(q^6),
-        q + 5*q^3 + 22*q^4 + 6*q^5 + O(q^6),
+        [q^4 - 4*q^5 + O(q^6),
+        q^3 - 2*q^4 + 8*q^5 + O(q^6),
         q^2 - 2*q^3 + 3*q^4 + 24*q^5 + O(q^6),
         q^2 + 10*q^4 - 4*q^5 + O(q^6),
-        q^3 - 2*q^4 + 8*q^5 + O(q^6),
-        q^4 - 4*q^5 + O(q^6)]
+        q + 5*q^3 + 22*q^4 + 6*q^5 + O(q^6),
+        1 + 48*q^3 + O(q^6)]
         sage: g0*g0
         1 + 48*q^3 + O(q^6)
         sage: g0*g1
@@ -110,17 +109,24 @@ def homogeneous_monomials_of_weight(M, weight, check=False):
         sage: g2*g2
         q^4 - 4*q^5 + O(q^6)
     """
-    if check:
-        if not check_generators_weights(M):
-            raise ValueError("the generators have different weights")
-        k = M.generators()[0][0]
-        if not k.is_power_of(weight):
-            raise ValueError("the given weight should be the a power of the weight of the generators")
+    G = M.group()
+    N = G.level()
+    if G is not SL2Z and G == Gamma1(N):
+        raise NotImplementedError
     gen_list = M.gen_forms()
-    comb = combinations_with_replacement(gen_list, weight/2)
+    weights_of_generators = [g.weight() for g in gen_list]
+    comb = WeightedIntegerVectors(weight, weights_of_generators).list()
+    if len(comb) == 0:
+        raise ValueError("there is no modular forms of the given weight (%s) for %s"%(weight, M.group()))
+
     monomials = []
-    for tuple in list(comb):
-        monomials.append(prod(tuple))
+    for exponents in comb:
+        monomial_forms = 1
+        iter = 0
+        for e, g in zip(exponents, gen_list):
+            pow_g = prod(g for i in range(0, e))
+            monomial_forms *= pow_g
+        monomials.append(monomial_forms)
     return monomials
 
 def initialize_matrix_of_coefficients(monomials):
@@ -129,20 +135,21 @@ def initialize_matrix_of_coefficients(monomials):
 
     EXAMPLES::
 
+    sage: M = ModularFormsRing(Gamma0(6))
         sage: mon = homogeneous_monomials_of_weight(M, 4); mon
-        [1 + 48*q^3 + O(q^6),
-        q + 5*q^3 + 22*q^4 + 6*q^5 + O(q^6),
+        [q^4 - 4*q^5 + O(q^6),
+        q^3 - 2*q^4 + 8*q^5 + O(q^6),
         q^2 - 2*q^3 + 3*q^4 + 24*q^5 + O(q^6),
         q^2 + 10*q^4 - 4*q^5 + O(q^6),
-        q^3 - 2*q^4 + 8*q^5 + O(q^6),
-        q^4 - 4*q^5 + O(q^6)]
+        q + 5*q^3 + 22*q^4 + 6*q^5 + O(q^6),
+        1 + 48*q^3 + O(q^6)]
         sage: initialize_matrix_of_coefficients(mon)
-        [ 1  0  0  0  0  0]
-        [ 0  1  0  0  0  0]
+        [ 0  0  0  0  0  1]
+        [ 0  0  0  0  1  0]
         [ 0  0  1  1  0  0]
-        [48  5 -2  0  1  0]
-        [ 0 22  3 10 -2  1]
-        [ 0  6 24 -4  8 -4]
+        [ 0  1 -2  0  5 48]
+        [ 1 -2  3 10 22  0]
+        [-4  8 24 -4  6  0]
     """
     if len(monomials) == 0:
         raise ValueError
@@ -152,7 +159,7 @@ def initialize_matrix_of_coefficients(monomials):
         matrix_data.append(f.coefficients([0..parent.sturm_bound()]))
     return Matrix(matrix_data).transpose()
 
-def relations(M, weight, check=False):
+def relations(M, weight):
     r"""
     Given a ring of modular forms `M`, returns the algebraic relations in weight `weight` in terms
     of a matrix. More precisely, the coefficients of each rows of the matrix gives the coefficients
@@ -166,19 +173,12 @@ def relations(M, weight, check=False):
 
         sage: M = ModularFormsRing(Gamma0(6))
         sage: relations(M, 4)
-        [ 0  0  1 -1  2 11]
-        sage: g1, g2, g3 = M.gen_forms()
-        sage: (g1*g3 - g2*g2 + 2*g2*g3 + 11*g3*g3).is_zero()
+        [    1  2/11  1/11 -1/11     0     0]
+        sage: f1,f2,f3,f4,f5,f6 = homogeneous_monomials_of_weight(M, 4)
+        sage: (f1 + (2/11)*f2 + (1/11)*f3 - (1/11)*f4).is_zero()
         True
-        sage: M = ModularFormsRing(Gamma0(12))
-        [ 0  0  1  0  0 -1  0  0  0  0  0  0  7  0 -6]
-        [ 0  0  0  1  0  0 -1  0  0  0  0  0  0 11  0]
-        [ 0  0  0  0  1  0  0  0  0 -1  0  0  2  0  7]
-        [ 0  0  0  0  0  0  0  1  0 -1  0  0  0  0  4]
-        [ 0  0  0  0  0  0  0  0  1  0 -1  0  0  2  0]
-        [ 0  0  0  0  0  0  0  0  0  0  0  1 -1  0  2]
     """
-    monomials = homogeneous_monomials_of_weight(M, weight, check)
+    monomials = homogeneous_monomials_of_weight(M, weight)
     A = initialize_matrix_of_coefficients(monomials)
     ker = A.right_kernel()
     return ker.matrix()

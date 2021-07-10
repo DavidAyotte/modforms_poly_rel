@@ -28,20 +28,22 @@ where g1, g2 and g3 are generators for M(Gamma0(6))
     print("Writing on file 'result.txt' ")
     o.write(text)
     G = Gamma0 # The code currently only works for Gamma0
+    k = 4
     maxN = 25 # Maximum level
     print("Maximum level: %s"%(maxN))
     verbose = False # Set this to True if you want more console outputs
     for N in range(1,maxN+1):
         M = ModularFormsRing(G(N))
         if verbose:
-            print("Group: %s, Weight: %s"%(G(N), 2*k))
+            print("Group: %s, Weight: %s"%(G(N), k))
         if check_generators_weights(M):
-            k = weights_of_generators(M)[0]
-            relation_matrix = relations(M, 2*k)
-            o.write("Group: %s, Weight: %s \nRelation matrix: \n"%(G(N), 2*k))
+            #k = weights_of_generators(M)[0]
+            relation_matrix = relations(M, k)
+            o.write("Group: %s, Weight: %s \nRelation matrix: \n"%(G(N), k))
             o.write(relation_matrix.str() + "\n\n")
-            if not check_generators_relations(M, relation_matrix, 2*k):
-                print("Problem detected ---> Group: %s, Weight: %s !"%(M, G(N), 2*k))
+            print(check_generators_relations(M, relation_matrix, k))
+            if not check_generators_relations(M, relation_matrix, k):
+                print("Problem detected ---> Group: %s, Weight: %s !"%(M, G(N), k))
     print("End of computations")
     o.close()
 

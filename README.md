@@ -3,16 +3,14 @@
 This package contains certain utility functions that finds polynomials relations between
 the generators of the graded ring of modular forms for Gamma0(N).
 
-Note that this implementation works only if the generators all have the same weight.
-
-EXAMPLE:
+## EXAMPLE:
 
 ```sage
     sage: M = ModularFormsRing(Gamma0(6))
     sage: relations(M, 4)
-    [ 0  0  1 -1  2 11]
-    sage: g1, g2, g3 = M.gen_forms()
-    sage: (g1*g3 - g2*g2 + 2*g2*g3 + 11*g3*g3).is_zero()
+    [    1  2/11  1/11 -1/11     0     0]
+    sage: f1,f2,f3,f4,f5,f6 = homogeneous_monomials_of_weight(M, 4)
+    sage: (f1 + (2/11)*f2 + (1/11)*f3 - (1/11)*f4).is_zero()
     True
 ```
 
@@ -31,5 +29,3 @@ After cloning this repo, if you only want to use the utility functions (and don'
 ```
 
 This will only load the functions defined in `relation.sage` in your current session. To see the docstring of a given function, you can write `name_of_function?`.
-
-Note: this code was tested for [SageMath](https://www.sagemath.org/) version 9.0 and above.
