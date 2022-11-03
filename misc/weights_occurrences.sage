@@ -1,10 +1,10 @@
 # Script counting the number of occurrences of a weight appearing in the list of
 # generators returned by SageMath
 
-max_level = 20
-prec = max_level + 1
-group = Gamma1  # choose either Gamma0 or Gamma1
-file_name = ""  # name of the file to ouput the results
+max_level = 15
+prec = max_level + 1  # q-expansion precision
+group = Gamma0  # choose either Gamma0 or Gamma1
+file_name = ""  # change this if you want a costum name for the text file containing the results
                 # the default name is "{group}_max_{max_level}"
 
 # The script compute a dictionnary named "result" where
@@ -29,7 +29,10 @@ if group == Gamma0:
 elif group == Gamma1:
     group_str = "Gamma1"
 
-fi = open(file_name + group_str + '_max_' + str(max_level) + '.txt', 'w')
+if len(file_name) == 0:
+    file_name = group_str + '_max_' + str(max_level) + '.txt'
+
+fi = open(file_name, 'w')
 
 fi.write(f"Chosen group: {group_str}\n")
 fi.write(f"Maximum level: {max_level}\n")
