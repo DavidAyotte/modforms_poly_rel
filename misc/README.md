@@ -10,7 +10,7 @@ To use this script, load the file `weight_occurrences.sage` in your SageMath ses
 
 A text file will be created in the directory with the ouput of the results. The files `Gamma0_max_30.txt` and `Gamma1_max_20.txt` already contains some results.
 
-You may also open the file `weight_occurrences.sage` and change the initial parameters (ex: the group and the maximum level).
+You may also open the file `weight_occurrences.sage` and change the initial parameters:
 
 ```sage
 max_level = 15
