@@ -1,6 +1,6 @@
 # Counting weights of generators
 
-This script count the number of occurrences of the weights of the generators for a modular forms ring for `Gamma0` or `Gamma1`.
+This script counts the number of occurrences of the weights of the generators for a modular forms ring for `Gamma0` or `Gamma1`.
 
 To use this script, load the file `weight_occurrences.sage` in your SageMath session.
 
@@ -11,6 +11,14 @@ To use this script, load the file `weight_occurrences.sage` in your SageMath ses
 A text file will be created in the directory with the ouput of the results. The files `Gamma0_max_30.txt` and `Gamma1_max_20.txt` already contains some results.
 
 You may also open the file `weight_occurrences.sage` and change the initial parameters (ex: the group and the maximum level).
+
+```sage
+max_level = 15
+prec = max_level + 1  # q-expansion precision
+group = Gamma0  # choose either Gamma0 or Gamma1
+file_name = ""  # change this if you want a costum name for the text file containing the results
+                # the default name is "{group}_max_{max_level}"
+```
 
 ## Explanations
 
